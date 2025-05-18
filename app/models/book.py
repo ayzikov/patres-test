@@ -33,10 +33,10 @@ class BorrowedBook(Base):
     is_active: Mapped[bool] = mapped_column(default=True)
 
     book_id: Mapped[int] = mapped_column(ForeignKey("book.id"))
-    book: Mapped["Book"] = relationship(back_populates="borrowed_book")
+    book: Mapped["Book"] = relationship(back_populates="borrowed_books")
 
     reader_id: Mapped[int] = mapped_column(ForeignKey("reader.id"))
-    reader: Mapped["Reader"] = relationship(back_populates="borrowed_book")
+    reader: Mapped["Reader"] = relationship(back_populates="borrowed_books")
 
 
 
