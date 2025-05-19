@@ -20,6 +20,7 @@ class Book(Base):
     publication_year: Mapped[Optional[int]] = mapped_column()
     isbn: Mapped[Optional[str]] = mapped_column(String(13), unique=True)
     copies_quantity: Mapped[int] = mapped_column(default=1)
+    description: Mapped[str] = mapped_column(String(500))
 
     borrowed_books: Mapped[List["BorrowedBook"]] = relationship(back_populates="book")
 
