@@ -4,8 +4,6 @@ import datetime
 from sqlalchemy import select, delete, update
 from sqlalchemy.exc import NoResultFound
 from sqlalchemy.ext.asyncio import AsyncSession
-from watchfiles import awatch
-
 # local
 from app.models.book import Book, BorrowedBook
 from app.schemas.book import CreateBook, UpdateBook
