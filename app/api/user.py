@@ -5,7 +5,8 @@ from fastapi import APIRouter, status, Depends, HTTPException
 from sqlalchemy.exc import NoResultFound
 from sqlalchemy.ext.asyncio import AsyncSession
 # local
-from app.services.dependencies import get_db_session
+from app.models.librarian import Librarian
+from app.services.dependencies import get_db_session, get_current_user
 from app.schemas.user import UpdateReader
 from app.services.reader_service import ReaderService
 
@@ -16,6 +17,7 @@ router = APIRouter(prefix="/users", tags=["User"])
 @router.get("/readers")
 async def get_readers(
         db: Annotated[AsyncSession, Depends(get_db_session)],
+        librarian: Annotated[Librarian, Depends(get_current_user)],
 ):
     """ Получение всех читателей """
     reader_service = ReaderService(db)
@@ -25,6 +27,7 @@ async def get_readers(
 @router.get("/readers/{reader_id}")
 async def get_reader(
         db: Annotated[AsyncSession, Depends(get_db_session)],
+        librarian: Annotated[Librarian, Depends(get_current_user)],
         reader_id: int
 ):
     """ Получение одного читателя """
@@ -41,6 +44,7 @@ async def get_reader(
 @router.patch("/readers/{reader_id}")
 async def update_reader(
         db: Annotated[AsyncSession, Depends(get_db_session)],
+        librarian: Annotated[Librarian, Depends(get_current_user)],
         reader_id: int,
         reader_data: UpdateReader
 ):
@@ -58,6 +62,7 @@ async def update_reader(
 @router.patch("/readers/{reader_id}")
 async def delete_reader(
         db: Annotated[AsyncSession, Depends(get_db_session)],
+        librarian: Annotated[Librarian, Depends(get_current_user)],
         reader_id: int,
 ):
     """ Удаление одного читателя """

@@ -6,9 +6,8 @@ from sqlalchemy.exc import NoResultFound
 from sqlalchemy.ext.asyncio import AsyncSession
 # local
 from app.models.librarian import Librarian
-from app.services.dependencies import get_db_session
+from app.services.dependencies import get_db_session, get_current_user
 from app.services.book_service import BookService
-from app.services.dependencies import get_current_user
 from app.schemas.book import CreateBook, UpdateBook
 
 
@@ -17,10 +16,8 @@ router = APIRouter(prefix="/books", tags=["Book"])
 
 @router.get("/", status_code=status.HTTP_200_OK)
 async def get_books(
-        db: Annotated[AsyncSession, Depends(get_db_session)],
-        librarian: Annotated[Librarian, Depends(get_current_user)]
+        db: Annotated[AsyncSession, Depends(get_db_session)]
 ):
-    # БЕЗ JWT
     """ Получение всех книг """
     book_service = BookService(db)
     return await book_service.get_all_books()
@@ -29,6 +26,7 @@ async def get_books(
 @router.get("/{book_id}", status_code=status.HTTP_200_OK)
 async def get_book(
         db: Annotated[AsyncSession, Depends(get_db_session)],
+        librarian: Annotated[Librarian, Depends(get_current_user)],
         book_id: int):
     """ Получение конкретной книги """
     book_service = BookService(db)
@@ -45,6 +43,7 @@ async def get_book(
 @router.get("/reader/{reader_id}", status_code=status.HTTP_200_OK)
 async def get_reader_books(
         db: Annotated[AsyncSession, Depends(get_db_session)],
+        librarian: Annotated[Librarian, Depends(get_current_user)],
         reader_id: int
 ):
     """ Получение книг взятых читателем """
@@ -62,6 +61,7 @@ async def get_reader_books(
 @router.post("/", status_code=status.HTTP_201_CREATED)
 async def create_book(
         db: Annotated[AsyncSession, Depends(get_db_session)],
+        librarian: Annotated[Librarian, Depends(get_current_user)],
         book_data: CreateBook
 ):
     """ Создание книги """
@@ -73,6 +73,7 @@ async def create_book(
 @router.patch("/{book_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def update_book(
         db: Annotated[AsyncSession, Depends(get_db_session)],
+        librarian: Annotated[Librarian, Depends(get_current_user)],
         book_id: int,
         book_data: UpdateBook):
     """ Обновление книги """
@@ -89,6 +90,7 @@ async def update_book(
 @router.delete("/{book_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_book(
         db: Annotated[AsyncSession, Depends(get_db_session)],
+        librarian: Annotated[Librarian, Depends(get_current_user)],
         book_id: int
 ):
     """ Удаление книги """
@@ -105,6 +107,7 @@ async def delete_book(
 @router.post("/borrow/{book_id}/reader/{reader_id}", status_code=status.HTTP_201_CREATED)
 async def borrow_book_reader(
         db: Annotated[AsyncSession, Depends(get_db_session)],
+        librarian: Annotated[Librarian, Depends(get_current_user)],
         book_id: int,
         reader_id: int):
     """ Выдача книги читателю """
@@ -127,6 +130,7 @@ async def borrow_book_reader(
 @router.post("/return/{book_id}/reader/{reader_id}", status_code=status.HTTP_200_OK)
 async def return_book_library(
         db: Annotated[AsyncSession, Depends(get_db_session)],
+        librarian: Annotated[Librarian, Depends(get_current_user)],
         book_id: int,
         reader_id: int):
     """ Возврат книги от читателя в библиотеку """
