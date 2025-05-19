@@ -15,7 +15,7 @@ router = APIRouter(prefix="/users", tags=["User"])
 
 @router.get("/readers")
 async def get_readers(
-        db: Annotated[AsyncSession, Depends(get_db_session)]
+        db: Annotated[AsyncSession, Depends(get_db_session)],
 ):
     """ Получение всех читателей """
     reader_service = ReaderService(db)
@@ -46,7 +46,13 @@ async def update_reader(
 ):
     """ Обновление одного читателя """
     reader_service = ReaderService(db)
-    pass
+    try:
+        await reader_service.update_particular_reader(reader_id, reader_data)
+    except NoResultFound:
+        raise HTTPException(
+            detail="Читателя с таким id не существует",
+            status_code=status.HTTP_400_BAD_REQUEST
+        )
 
 
 @router.patch("/readers/{reader_id}")
@@ -56,4 +62,10 @@ async def delete_reader(
 ):
     """ Удаление одного читателя """
     reader_service = ReaderService(db)
-    pass
+    try:
+        await reader_service.delete_particular_reader(reader_id)
+    except NoResultFound:
+        raise HTTPException(
+            detail="Читателя с таким id не существует",
+            status_code=status.HTTP_400_BAD_REQUEST
+        )
