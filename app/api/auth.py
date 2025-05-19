@@ -6,7 +6,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.exc import NoResultFound
 from sqlalchemy.ext.asyncio import AsyncSession
 # local
-from app.backend.db_depends import get_db_session
+from app.services.dependencies import get_db_session
 from app.services.reader_service import ReaderService
 from app.services.librarian_service import LibrarianService
 from app.services.auth_service import AuthService

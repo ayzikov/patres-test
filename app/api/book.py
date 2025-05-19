@@ -5,8 +5,10 @@ from fastapi import APIRouter, status, Depends, HTTPException
 from sqlalchemy.exc import NoResultFound
 from sqlalchemy.ext.asyncio import AsyncSession
 # local
-from app.backend.db_depends import get_db_session
+from app.models.librarian import Librarian
+from app.services.dependencies import get_db_session
 from app.services.book_service import BookService
+from app.services.dependencies import get_current_user
 from app.schemas.book import CreateBook, UpdateBook
 
 
@@ -15,7 +17,8 @@ router = APIRouter(prefix="/books", tags=["Book"])
 
 @router.get("/", status_code=status.HTTP_200_OK)
 async def get_books(
-        db: Annotated[AsyncSession, Depends(get_db_session)]
+        db: Annotated[AsyncSession, Depends(get_db_session)],
+        librarian: Annotated[Librarian, Depends(get_current_user)]
 ):
     # БЕЗ JWT
     """ Получение всех книг """

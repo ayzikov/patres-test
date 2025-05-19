@@ -30,12 +30,9 @@ class AuthService:
         """ Проверяет password на соответствие с hashed_password в БД """
         return self.bcrypt_context.verify(password, hashed_password)
 
-    def create_access_token(self, subject: str, expires_delta: int = None):
+    def create_access_token(self, subject: str):
         """ Создает access token """
-        if expires_delta is not None:
-            expires_delta = datetime.now(self.UTC_3) + expires_delta
-        else:
-            expires_delta = datetime.now(self.UTC_3) + timedelta(minutes=self.ACCESS_TOKEN_EXPIRE_MINUTES)
+        expires_delta = datetime.now(self.UTC_3) + timedelta(minutes=self.ACCESS_TOKEN_EXPIRE_MINUTES)
 
         payload = {
             "exp": expires_delta,
@@ -45,12 +42,9 @@ class AuthService:
         encoded_jwt = jwt.encode(payload, self.JWT_SECRET_KEY, self.ALGORITHM)
         return encoded_jwt
 
-    def create_refresh_token(self, subject: str, expires_delta: int = None):
+    def create_refresh_token(self, subject: str):
         """ Создает refresh token """
-        if expires_delta is not None:
-            expires_delta = datetime.now(self.UTC_3) + expires_delta
-        else:
-            expires_delta = datetime.now(self.UTC_3) + timedelta(minutes=self.REFRESH_TOKEN_EXPIRE_MINUTES)
+        expires_delta = datetime.now(self.UTC_3) + timedelta(minutes=self.REFRESH_TOKEN_EXPIRE_MINUTES)
 
         payload = {
             "exp": expires_delta,
@@ -59,4 +53,3 @@ class AuthService:
         }
         encoded_jwt = jwt.encode(payload, self.JWT_REFRESH_SECRET_KEY, self.ALGORITHM)
         return encoded_jwt
-

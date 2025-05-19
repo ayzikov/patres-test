@@ -5,7 +5,7 @@ from fastapi import APIRouter, status, Depends, HTTPException
 from sqlalchemy.exc import NoResultFound
 from sqlalchemy.ext.asyncio import AsyncSession
 # local
-from app.backend.db_depends import get_db_session
+from app.services.dependencies import get_db_session
 from app.schemas.user import UpdateReader
 from app.services.reader_service import ReaderService
 
